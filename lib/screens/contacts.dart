@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_contact/contacts.dart';
 import 'package:sim_info/sim_info.dart';
 
 import 'widgets.dart';
@@ -295,15 +292,17 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ContactsService.getContacts(
+      future: Contacts.streamContacts(
+        bufferSize: 10000,
         withThumbnails: false,
-      ),
+        withHiResPhoto: false,
+      ).toList(),
       builder: (context, snapshot) {
         Widget body, bottom;
 
         String counter = '';
 
-        var onPressed = () {};
+        var onPressed;
 
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -346,7 +345,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.more_vert),
+                icon: Icon(CupertinoIcons.arrow_clockwise),
                 iconSize: measures.iconSize,
                 onPressed: onPressed,
               ),
@@ -424,9 +423,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   static Future<void> updateContacts(String countryName) async {
-    var contacts = await ContactsService.getContacts(
+    var contacts = await Contacts.streamContacts(
+      bufferSize: 10000,
       withThumbnails: false,
-    );
+      withHiResPhoto: false,
+    ).toList();
     for (Contact c in contacts) {
       List<Item> phones = [];
       for (Item p in c.phones) {
@@ -445,14 +446,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
       }
       if (phones == c.phones) continue;
       c.phones = phones;
-      await ContactsService.updateContact(c);
+      await Contacts.updateContact(c);
     }
   }
 
   static Future<void> resetContacts(String countryName) async {
-    var contacts = await ContactsService.getContacts(
+    var contacts = await Contacts.streamContacts(
+      bufferSize: 10000,
       withThumbnails: false,
-    );
+      withHiResPhoto: false,
+    ).toList();
     for (Contact c in contacts) {
       List<Item> phones = [];
       for (Item p in c.phones) {
@@ -471,7 +474,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       }
       if (phones == c.phones) continue;
       c.phones = phones;
-      await ContactsService.updateContact(c);
+      await Contacts.updateContact(c);
     }
   }
 }

@@ -13,9 +13,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(
-          CupertinoIcons.phone_fill,
-          size: measure.iconSize,
+          CupertinoIcons.sum,
           color: Colors.black,
+          size: measure.iconSize,
         ),
         actions: [
           IconButton(
@@ -50,6 +50,14 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
+                padding: EdgeInsets.all(measure.value * 30),
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Icon(
+                    CupertinoIcons.phone_fill,
+                    color: Colors.black,
+                  ),
+                ),
                 height: measure.toolbarHeight * 2.5,
               ),
               Text(
